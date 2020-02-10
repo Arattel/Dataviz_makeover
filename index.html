@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emoji frequency visualization</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+    <script type="text/javascript">
+        function draw(data) {
+
+            /*
+              D3.js setup code
+            */
+
+            "use strict";
+            var margin = 25,
+                width = 1400 - margin,
+                height = 850 - margin;
+            d3.select("body").append("h1").text("Emoji frequency");
+            var svg = d3.select("body")
+                .append("svg")
+                .attr("width", width + margin)
+                .attr("height", height + margin)
+                .append('g')
+                .attr('class', 'chart');
+
+            let freq = Array.from({length: data.length}, () => Math.random(42));
+            for (let i = 0; i < data.length; i++) {
+                data[i]['freq'] = freq[i];
+            }
+            data = data.slice(1, 20);
+            var myChart = new dimple.chart(svg, data);
+            var x = myChart.addCategoryAxis("x", "emoji");
+            x.fontSize = "30px";
+            let y = myChart.addMeasureAxis("y", "freq");
+            y.fontSize = "20px";
+            y.title = "Emoji frequecy";
+            myChart.addSeries(null, dimple.plot.bar);
+            myChart.draw();
+        }
+    </script>
+    <style>
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+    /*
+      Use D3 (not dimple.js) to load the TSV file
+      and pass the contents of it to the draw function
+      */
+    d3.csv("emoji_df.csv", draw);
+</script>
+</body>
+</html>
